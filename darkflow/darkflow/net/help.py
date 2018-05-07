@@ -72,9 +72,8 @@ def _get_fps(self, frame):
     return timer() - start
 
 def image_return(self, cleanImage, encoder, tracker):
-    self.FLAGS.track = True
     if self.FLAGS.BK_MOG and self.FLAGS.track:
-        fgbg = cv2.bgsegm_BackgroundSubtractorMOG()
+        fgbg = cv2.createBackgroundSubtractorMOG2()
 
     frame = cleanImage
     height, width, _ = frame.shape
@@ -87,7 +86,6 @@ def image_return(self, cleanImage, encoder, tracker):
     else:
         fgmask = None
 
-
     preprocessed = self.framework.preprocess(frame)
     buffer_inp.append(frame)
     buffer_pre.append(preprocessed)
@@ -97,7 +95,7 @@ def image_return(self, cleanImage, encoder, tracker):
     for img, single_out in zip(buffer_inp, net_out):
         postprocessed = self.framework.postprocess(
             single_out, img, frame_id=0,
-            csv_file=None, csv=None, mask=None,
+            csv_file=None, csv=None, mask=fgmask,
             encoder=encoder, tracker=tracker)
     # Clear Buffers
     buffer_inp = list()

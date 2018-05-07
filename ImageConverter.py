@@ -13,8 +13,8 @@ import os
 class ImageConverter:
     def __init__(self, args):
         topicName = "/stream_1"
-        self.image_publisher = rospy.Publisher("tracking_1", Image)
-        self.subscriber = rospy.Subscriber(topicName, Image, self.callback, queue_size = 1, buff_size=2**24)
+        self.image_publisher = rospy.Publisher(args.output, Image)
+        self.subscriber = rospy.Subscriber(args.input, Image, self.callback, queue_size = 1, buff_size=2**24)
 
         metric = nn_matching.NearestNeighborDistanceMetric(
             "cosine", 0.2, 100)
@@ -23,7 +23,7 @@ class ImageConverter:
             os.path.abspath("deep_sort/resources/networks/mars-small128.ckpt-68577"))
 
         options = {"model": "darkflow/cfg/yolo.cfg", "load": "darkflow/bin/yolo.weights", "threshold": 0.1,
-                   "track": True, "trackObj": ["person"], "BK_MOG": False, "tracker": "deep_sort", "csv": False}
+                   "track": True, "trackObj": ["person"], "BK_MOG": True, "tracker": "deep_sort", "csv": False}
         self.tfnet = TFNet(options)
 
     def callback(self, image_message):
@@ -45,8 +45,9 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--source', type=str,
-                        help='Specify what you want to use. Give the topic name of the device.',
-                        default='/usb_cam/image_raw')
+    parser.add_argument('--input', type=str,
+                        help='Specify the topic you wish to use as input.', default='/stream_1')
+    parser.add_argument('--output', type=str,
+                        help='Specify the topic you wish to publish the output image to.', default='/tracking_1')
     args = parser.parse_args()
     main(args)
