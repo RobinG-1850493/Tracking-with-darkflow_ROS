@@ -1,10 +1,6 @@
 ## Intro
 
-The purpose of this little project is to add object tracking to yolov2 and achieve real-time multiple object tracking.
-
-The current architecture is set to only track one type of objects, but it should be easy to generalise over all objects.
-
-Currently support people tracking (as the provided weights for deep_sort were trained on people tracking)
+This Project was cloned from https://github.com/bendidi/Tracking-with-darkflow and modified to incorporate ROS topics as input and output.
 
 ## Dependencies
 
@@ -26,7 +22,7 @@ for using sort :
 
 ### Setup
 
-1 - Clone this repository : `git clone https://github.com/bendidi/Tracking-with-darkflow.git`
+1 - Clone this repository : `git clone https://github.com/RobinGoos/Tracking-with-darkflow_ROS`
 
 2 - Initialize all submodules: `git submodule update --init --recursive`
 
@@ -88,6 +84,8 @@ skipping up to 3 frames allows for more speed up while keeping accuracy of track
 ## Disclamer :
 
 this project is using code forked from:
+
+[bendidi/Tracking-with-darkflow](https://github.com/bendidi/Tracking-with-darkflow): Real-time Multitracker using YOLO v2 and deep_sort with tensorflow
 
 [thtrieu/darkflow](https://github.com/thtrieu/darkflow): for the real-time object detections and classifications.
 
