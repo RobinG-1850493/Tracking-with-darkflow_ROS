@@ -12,7 +12,6 @@ import os
 
 class ImageConverter:
     def __init__(self, args):
-        topicName = "/stream_1"
         self.image_publisher = rospy.Publisher(args.output, Image)
         self.subscriber = rospy.Subscriber(args.input, Image, self.callback, queue_size = 1, buff_size=2**24)
 
@@ -29,7 +28,8 @@ class ImageConverter:
     def callback(self, image_message):
         bridge = CvBridge()
         image = bridge.imgmsg_to_cv2(image_message, 'bgr8')
-        processedimg = self.tfnet.image_return(image, self.encoder, self.tracker)
+        processedimg, fps = self.tfnet.image_return(image, self.encoder, self.tracker)
+        print(fps)
         self.image_publisher.publish(bridge.cv2_to_imgmsg(processedimg, "bgr8"))
         cv2.waitKey(1)
 

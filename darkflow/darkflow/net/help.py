@@ -3,6 +3,7 @@ tfnet secondary (helper) methods
 """
 from ..utils.loader import create_loader
 from time import time as timer
+import time
 import tensorflow as tf
 import numpy as np
 import sys
@@ -72,6 +73,7 @@ def _get_fps(self, frame):
     return timer() - start
 
 def image_return(self, cleanImage, encoder, tracker):
+    start = time.time()
     if self.FLAGS.BK_MOG and self.FLAGS.track:
         fgbg = cv2.createBackgroundSubtractorMOG2()
 
@@ -89,7 +91,7 @@ def image_return(self, cleanImage, encoder, tracker):
     preprocessed = self.framework.preprocess(frame)
     buffer_inp.append(frame)
     buffer_pre.append(preprocessed)
-    # Only process and imshow when queue is full
+
     feed_dict = {self.inp: buffer_pre}
     net_out = self.sess.run(self.out, feed_dict)
     for img, single_out in zip(buffer_inp, net_out):
@@ -97,11 +99,16 @@ def image_return(self, cleanImage, encoder, tracker):
             single_out, img, frame_id=0,
             csv_file=None, csv=None, mask=fgmask,
             encoder=encoder, tracker=tracker)
-    # Clear Buffers
+
     buffer_inp = list()
     buffer_pre = list()
 
-    return postprocessed
+    end = time.time()
+    total = end - start
+
+    fps = 1.0 / total
+
+    return postprocessed, fps
 
 def camera(self):
     file = self.FLAGS.demo

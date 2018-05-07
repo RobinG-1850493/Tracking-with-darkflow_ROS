@@ -63,7 +63,7 @@ def draw_trajectory(self, imgcv, bbox, id_num):
     trajectory[id_num].append(tuple(((int((bbox[0] + bbox[2]) / 2)), int(bbox[3]))))
 
     show_trajectory(self, trajectory, id_num, imgcv)
-    draw_2d_trajectory(self, trajectory, id_num)
+    #draw_2d_trajectory(self, trajectory, id_num)
 
 def draw_2d_trajectory(self, trajectory, id_num):
     for (x, y) in trajectory[id_num]:
@@ -72,8 +72,18 @@ def draw_2d_trajectory(self, trajectory, id_num):
     cv2.imshow("2d trajectory", img)
 
 def show_trajectory(self, trajectory, id_num, imgcv):
+    old_x = None
+    old_y = None
     for (x, y) in trajectory[id_num]:
-        cv2.line(imgcv, (x, y), (x, y), (0, 0, 0), 3, 2, 0)
+        if old_x == None:
+            cv2.line(imgcv, (x, y), (x, y), (0, 0, 0), 3, 2, 0)
+            old_x = x
+            old_y = y
+        else:
+            cv2.line(imgcv, (x, y), (old_x, old_y), (0, 0, 0), 3, 2, 0)
+            old_x = x
+            old_y = y
+
 
 def postprocess(self, net_out, im, frame_id=0, csv_file=None, csv=None, mask=None, encoder=None, tracker=None):
     """
