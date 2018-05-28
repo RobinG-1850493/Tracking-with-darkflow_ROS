@@ -24,6 +24,7 @@ class TFNet(object):
 
     # imported methods
     get_fps = help._get_fps
+    exit = help._exit_darkflow
     image_return = help.image_return
     say = help.say
     train = flow.train

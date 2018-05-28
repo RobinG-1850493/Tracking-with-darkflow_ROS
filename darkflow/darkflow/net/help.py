@@ -72,6 +72,9 @@ def _get_fps(self, frame):
     processed = self.framework.postprocess(net_out, frame)
     return timer() - start
 
+def _exit_darkflow(self):
+    exit("Stopping darkflow.")
+
 def image_return(self, cleanImage, encoder, tracker):
     start = time.time()
     if self.FLAGS.BK_MOG and self.FLAGS.track:
